@@ -43,15 +43,13 @@ public class App extends Application{
         
         scene.setOnKeyPressed(event -> { //Listen for keys the user pressed
 
-            //TODO merge the if statements together
-            if(MainController.is_setting_hotkey){
-                MainController.hotkey = event.getCode();
+            if(MainController.is_setting_hotkey || MainController.is_setting_target_key){
+
+                MainController.hotkey = MainController.is_setting_hotkey?event.getCode():MainController.hotkey;
+                MainController.targeted_key = MainController.is_setting_target_key?event.getCode():MainController.targeted_key;
+
                 if (!MainController.hotkey.equals(MainController.targeted_key)) {
                     MainController.is_setting_hotkey = false;
-                }
-            }else if(MainController.is_setting_target_key){
-                MainController.targeted_key = event.getCode();
-                if (!MainController.hotkey.equals(MainController.targeted_key)) {
                     MainController.is_setting_target_key = false;
                 }
             }
