@@ -2,14 +2,15 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.text.Text;
 
 public class MainController {
 
     static boolean is_setting_hotkey = false;
     static boolean is_setting_target_key = false;
-    static String hotkey = "F6";
-    static String targeted_key = "SPACE";
+    static KeyCode hotkey = KeyCode.F6;
+    static KeyCode targeted_key = KeyCode.SPACE;
 
     Thread changeHotkeyLabel;
     Thread changeTargetedKeyLabel;
@@ -25,37 +26,36 @@ public class MainController {
 
     @FXML
     public void setNewHotkey(ActionEvent event){
-        if (is_setting_hotkey == false) {
+        if (!is_setting_hotkey) {
             disableAllUiComponents(); //Disable the UI components
             is_setting_hotkey = true;
             
-            changeHotkeyLabel = new Thread(()->{
-                while (is_setting_hotkey){
-                    this.hotkey_label.setText(hotkey.toUpperCase()); //Set the hotkey label to the current hotkey
-                }
+            new Thread(()->{
+                while (is_setting_hotkey)
+                    this.hotkey_label.setText(hotkey.getName().toUpperCase()); //Set the hotkey label to the current hotkey
+                
 
                 enableAllUiComponents(); //Enable the UI components 
-            });
+            }).start();
 
-            changeHotkeyLabel.start();
+            
         }
     }
 
     @FXML
     public void setTargetedKey(ActionEvent event){
-        if (is_setting_target_key == false) {
+        if (!is_setting_target_key) {
             disableAllUiComponents(); //Disable the UI components
             is_setting_target_key = true;
             
-            changeTargetedKeyLabel = new Thread(()->{
-                while (is_setting_target_key){
-                    this.targeted_key_label.setText(targeted_key.toUpperCase()); //Set the hotkey label to the current hotkey
-                }
-
+            new Thread(()->{
+                while (is_setting_target_key)
+                    this.targeted_key_label.setText(targeted_key.getName().toUpperCase()); //Set the target key label to the current target key
+                
                 enableAllUiComponents(); //Enable the UI components 
-            });
+            }).start();
 
-            changeTargetedKeyLabel.start();
+            
         }
     }
 
@@ -81,8 +81,8 @@ public class MainController {
 
 
 
-    public void setHotkey(String key) {hotkey = key;}
-    public void setTargetedKey(String key) {targeted_key = key;}
+    public void setHotkey(KeyCode keyCode) {hotkey = keyCode;}
+    public void setTargetedKey(KeyCode keyCode) {targeted_key = keyCode;}
 
 
     public void setIsSettingHotkey(boolean isSettingHotkey) {is_setting_hotkey = isSettingHotkey;}
@@ -90,7 +90,7 @@ public class MainController {
 
     public boolean getIsSettingTargetKey() {return is_setting_target_key;}
     public boolean getIsSettingHotkey() {return is_setting_hotkey;}
-    public String getHotkey() {return hotkey;}
-    public String getTargetedKey() {return targeted_key;}
+    public String getHotkey() {return hotkey.getName();}
+    public String getTargetedKey() {return targeted_key.getName();}
     
 }
