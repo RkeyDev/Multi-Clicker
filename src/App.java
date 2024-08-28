@@ -54,7 +54,7 @@ public class App extends Application{
                 }
             }
         });
-
+        
         //Window configuration
         main_stage.setTitle("Multi-Clicker");
         main_stage.setScene(scene);
