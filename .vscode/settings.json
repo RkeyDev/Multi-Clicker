@@ -1,9 +1,0 @@
-{
-    "java.project.sourcePaths": ["src"],
-    "java.project.outputPath": "bin",
-    "java.project.referencedLibraries": [
-        "lib/**/*.jar",
-        "c:/Users/roei1/OneDrive/Documents/javafx-sdk-20.0.2/lib/*",
-        "c:/Users/roei1/OneDrive/Documents/VSCodeProjects/.JavaDependencies/jnativehook-2.2.2.jar"
-    ]
-}
