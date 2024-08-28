@@ -22,61 +22,52 @@ public class MainController {
     @FXML private TextField cooldown_text_field;
 
     
-    //TODO Merge setNewHotKey and setTargetKey together
 
     @FXML
     public void setNewHotkey(ActionEvent event){
-        if (!is_setting_hotkey) {
-            disableAllUiComponents(); //Disable the UI components
-            is_setting_hotkey = true;
-            
-            new Thread(()->{
-                while (is_setting_hotkey)
-                    this.hotkey_label.setText(hotkey.getName().toUpperCase()); //Set the hotkey label to the current hotkey
-                
-
-                enableAllUiComponents(); //Enable the UI components 
-            }).start();
-
-            
-        }
+        setKey(KeyType.HOTKEY);
     }
 
     @FXML
     public void setTargetedKey(ActionEvent event){
-        if (!is_setting_target_key) {
-            disableAllUiComponents(); //Disable the UI components
-            is_setting_target_key = true;
-            
-            new Thread(()->{
-                while (is_setting_target_key)
-                    this.targeted_key_label.setText(targeted_key.getName().toUpperCase()); //Set the target key label to the current target key
-                
-                enableAllUiComponents(); //Enable the UI components 
-            }).start();
-
-            
-        }
+        setKey(KeyType.TARGETED_KEY);
     }
 
 
-    
-    public void disableAllUiComponents(){
+
+    public void setAllUiComponentsDisable(boolean is_disabled){
         //Disable all UI components
 
-        this.cooldown_text_field.setDisable(true);
-        this.targeted_key_button.setDisable(true);
-        this.hotkey_button.setDisable(true);
+        this.cooldown_text_field.setDisable(is_disabled);
+        this.targeted_key_button.setDisable(is_disabled);
+        this.hotkey_button.setDisable(is_disabled);
     }
 
-    public void enableAllUiComponents(){
-        //Enable all UI components
+   
 
-        this.cooldown_text_field.setDisable(false);
-        this.targeted_key_button.setDisable(false);
-        this.hotkey_button.setDisable(false);
+    private void setKey(KeyType key_type){
+    if (!(is_setting_hotkey || is_setting_target_key)) {
+        setAllUiComponentsDisable(true); //Disable the UI components
+
+        is_setting_target_key = key_type.equals(KeyType.TARGETED_KEY)?true:false;
+        is_setting_hotkey = key_type.equals(KeyType.HOTKEY)?true:false;
+
+        new Thread(()->{ //New thread to set the key
+            while (is_setting_target_key || is_setting_hotkey){
+                if (is_setting_hotkey) {
+                    //Set the target key label to the current target key
+                    this.hotkey_label.setText(hotkey.getName().toUpperCase()); 
+                }else if (is_setting_target_key) {
+                    //Set the target key label to the current target key
+                    this.targeted_key_label.setText(targeted_key.getName().toUpperCase()); 
+                }
+                
+            }
+
+            setAllUiComponentsDisable(false); //Enable the UI components 
+        }).start();
     }
-
+}
 
 
 

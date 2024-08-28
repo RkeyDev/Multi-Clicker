@@ -33,13 +33,12 @@ public class AutoClicker implements NativeKeyListener{
     }
 
     public void nativeKeyPressed(NativeKeyEvent e) {
-            System.out.println(App.keyCodesMap.get(e.getKeyCode()) + "\n" + MainController.hotkey);
 
                 if(!(MainController.is_setting_hotkey || MainController.is_setting_target_key)){
                     if(App.keyCodesMap.get(e.getKeyCode()) == MainController.hotkey){
                         is_auto_active = !is_auto_active; //Toggle on/off auto clicker
 
-                        new Thread(()->keyboardAutoPressThread()).start();
+                        new Thread(()->keyboardAutoPressThread()).start(); //Start auto key clicker thread
                         
                     }
             }
