@@ -47,7 +47,7 @@ public class MainController {
                 previous_cooldown_text = newValue; //Store the last cooldown_text
 
                 //Set auto_clicker_cooldown to default_cooldown if cooldown is above max_cooldown or below min_cooldown
-                if(auto_clicker_cooldown<MIN_COOLDOWN_SPEED && auto_clicker_cooldown>MAX_COOLDOWN_SPEED)
+                if(auto_clicker_cooldown<MIN_COOLDOWN_SPEED || auto_clicker_cooldown>MAX_COOLDOWN_SPEED)
                     auto_clicker_cooldown = DEFAULT_COOLDOWN_SPEED;
 
                     
