@@ -1,3 +1,4 @@
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -7,21 +8,71 @@ import javafx.scene.text.Text;
 
 public class MainController {
 
-    static boolean is_setting_hotkey = false;
-    static boolean is_setting_target_key = false;
-    static KeyCode hotkey = KeyCode.F6;
-    static KeyCode targeted_key = KeyCode.SPACE;
+    public static boolean is_setting_hotkey = false;
+    public static boolean is_setting_target_key = false;
+    public static KeyCode hotkey = KeyCode.F6;
+    public static KeyCode targeted_key = KeyCode.SPACE;
+    public static int auto_clicker_cooldown = 100;
+    public static boolean is_cooldown_text_filed_selected = false;
 
-    Thread changeHotkeyLabel;
-    Thread changeTargetedKeyLabel;
+    private String newValue;
+    private String previous_cooldown_text = "";
 
-    @FXML private Button hotkey_button;
-    @FXML private Button targeted_key_button;
-    @FXML private Text hotkey_label;
-    @FXML private Text targeted_key_label;
-    @FXML private TextField cooldown_text_field;
+    private final int MIN_COOLDOWN_SPEED = 1;      
+    private final int MAX_COOLDOWN_SPEED = 600000; //10 minutes
+    private final int DEFAULT_COOLDOWN_SPEED = 100;
 
     
+    @FXML private TextField cooldown_text_field;
+    @FXML private Button hotkey_button;
+    @FXML private Button targeted_key_button;
+    @FXML private Button increase_cooldown_button;
+    @FXML private Button decrease_cooldown_button;
+    @FXML private Text hotkey_label;
+    @FXML private Text targeted_key_label;
+    
+
+    @FXML
+    public void initialize() {
+    
+        this.cooldown_text_field.textProperty().addListener(
+            (observable, oldValue, newValue) -> handleCooldownInput(newValue));
+    }
+
+
+
+    private void handleCooldownInput(String newValue){
+        try{
+            if(!newValue.isEmpty()){
+                auto_clicker_cooldown = Integer.parseInt(newValue);
+                previous_cooldown_text = newValue; //Store the last cooldown_text
+
+                //Set auto_clicker_cooldown to default_cooldown if cooldown is above max_cooldown or below min_cooldown
+                if(auto_clicker_cooldown<MIN_COOLDOWN_SPEED || auto_clicker_cooldown>MAX_COOLDOWN_SPEED)
+                    auto_clicker_cooldown = DEFAULT_COOLDOWN_SPEED;
+
+                    
+            }else{
+                previous_cooldown_text = ""; //Reset the previous_cooldown_text if cooldown text is empty
+            }
+        }
+        catch(NumberFormatException e){
+            
+            restoreCooldownTextField(newValue);              
+        }          
+    }
+
+    private void restoreCooldownTextField(String newValue){
+        Platform.runLater(()->{
+            this.cooldown_text_field.setText(previous_cooldown_text);
+            
+            //Return the caret to the end of the text
+            this.cooldown_text_field.positionCaret(newValue.length());
+            
+            
+            
+        }); 
+    }
 
     @FXML
     public void setNewHotkey(ActionEvent event){
@@ -38,12 +89,14 @@ public class MainController {
     public void setAllUiComponentsDisable(boolean is_disabled){
         //Disable all UI components
 
-        this.cooldown_text_field.setDisable(is_disabled);
+        cooldown_text_field.setDisable(is_disabled);
         this.targeted_key_button.setDisable(is_disabled);
         this.hotkey_button.setDisable(is_disabled);
+        this.increase_cooldown_button.setDisable(is_disabled);
+        this.decrease_cooldown_button.setDisable(is_disabled);
     }
 
-   
+      
 
     private void setKey(KeyType key_type){
     if (!(is_setting_hotkey || is_setting_target_key)) {
