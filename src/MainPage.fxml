@@ -14,14 +14,14 @@
             <Font size="15.0" />
          </font>
       </Text>
-      <TextField fx:id="cooldown_text_field" layoutX="115.0" layoutY="177.0" prefHeight="25.0" prefWidth="148.0" promptText="Cooldown (milliseconds)" />
+      <TextField fx:id="cooldown_text_field" layoutX="115.0" layoutY="177.0" prefHeight="25.0" prefWidth="148.0" promptText="Cooldown (milliseconds)" text="100" />
       <Button fx:id="targeted_key_button" layoutX="130.0" layoutY="239.0" mnemonicParsing="false" onAction="#setTargetedKey" prefHeight="32.0" prefWidth="118.0" text="Select targeted key" />
       <Text fx:id="targeted_key_label" layoutX="150.0" layoutY="307.0" strokeType="OUTSIDE" strokeWidth="0.0" text="SPACE" textAlignment="CENTER" wrappingWidth="77.328125">
          <font>
             <Font size="15.0" />
          </font>
       </Text>
-      <Button fx:id="increase_cooldown_button" layoutX="70.0" layoutY="171.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="32.0" text="+" />
-      <Button fx:id="decrease_cooldown_button" layoutX="276.0" layoutY="171.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="32.0" text="-" />
+      <Button fx:id="increase_cooldown_button" layoutX="70.0" layoutY="171.0" mnemonicParsing="false" onAction="#increaseCooldown" prefHeight="32.0" prefWidth="32.0" text="+" />
+      <Button fx:id="decrease_cooldown_button" layoutX="276.0" layoutY="171.0" mnemonicParsing="false" onAction="#decreaseCooldown" prefHeight="32.0" prefWidth="32.0" text="-" />
    </children>
 </AnchorPane>

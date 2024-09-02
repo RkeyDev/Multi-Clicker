@@ -15,7 +15,6 @@ public class MainController {
     public static int auto_clicker_cooldown = 100;
     public static boolean is_cooldown_text_filed_selected = false;
 
-    private String newValue;
     private String previous_cooldown_text = "";
 
     private final int MIN_COOLDOWN_SPEED = 1;      
@@ -48,7 +47,7 @@ public class MainController {
                 previous_cooldown_text = newValue; //Store the last cooldown_text
 
                 //Set auto_clicker_cooldown to default_cooldown if cooldown is above max_cooldown or below min_cooldown
-                if(auto_clicker_cooldown<MIN_COOLDOWN_SPEED || auto_clicker_cooldown>MAX_COOLDOWN_SPEED)
+                if(auto_clicker_cooldown<MIN_COOLDOWN_SPEED && auto_clicker_cooldown>MAX_COOLDOWN_SPEED)
                     auto_clicker_cooldown = DEFAULT_COOLDOWN_SPEED;
 
                     
@@ -84,6 +83,24 @@ public class MainController {
         setKey(KeyType.TARGETED_KEY);
     }
 
+    @FXML
+    public void increaseCooldown(){
+        addCooldown(5);
+    }
+
+    @FXML
+    public void decreaseCooldown(){
+        addCooldown(-5);
+    }
+
+
+    private void addCooldown(int cooldown){
+        if(auto_clicker_cooldown + cooldown>MIN_COOLDOWN_SPEED && auto_clicker_cooldown + cooldown < MAX_COOLDOWN_SPEED){
+            auto_clicker_cooldown += cooldown;
+            this.cooldown_text_field.setText(String.valueOf(auto_clicker_cooldown));
+        }
+
+    }
 
 
     public void setAllUiComponentsDisable(boolean is_disabled){
