@@ -15,9 +15,9 @@ public class MainController {
     private final String APP_SETTINGS_PATH = "app-settings.properties";
 
     private int MIN_COOLDOWN_SPEED;      
-    private int MAX_COOLDOWN_SPEED; //10 minutes
+    private int MAX_COOLDOWN_SPEED;
     private int DEFAULT_COOLDOWN_SPEED;
-
+    private int COOLDOWN_INCREMENT;
 
     public static int auto_clicker_cooldown;
     public static boolean is_setting_hotkey = false;
@@ -48,6 +48,9 @@ public class MainController {
             this.MIN_COOLDOWN_SPEED = Integer.parseInt(properties.getProperty("cooldown.min"));
             this.MAX_COOLDOWN_SPEED = Integer.parseInt(properties.getProperty("cooldown.max"));
             this.DEFAULT_COOLDOWN_SPEED = Integer.parseInt(properties.getProperty("cooldown.default"));
+            this.COOLDOWN_INCREMENT = Integer.parseInt(properties.getProperty("cooldown.increment"));
+
+
 
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -109,12 +112,12 @@ public class MainController {
 
     @FXML
     public void increaseCooldown(){
-        addCooldown(5);
+        addCooldown(COOLDOWN_INCREMENT);
     }
 
     @FXML
     public void decreaseCooldown(){
-        addCooldown(-5);
+        addCooldown(-COOLDOWN_INCREMENT);
     }
 
 
