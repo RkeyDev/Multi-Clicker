@@ -5,21 +5,28 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.text.Text;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 public class MainController {
 
+    private final String APP_SETTINGS_PATH = "app-settings.properties";
+
+    private int MIN_COOLDOWN_SPEED;      
+    private int MAX_COOLDOWN_SPEED; //10 minutes
+    private int DEFAULT_COOLDOWN_SPEED;
+
+
+    public static int auto_clicker_cooldown;
     public static boolean is_setting_hotkey = false;
     public static boolean is_setting_target_key = false;
     public static KeyCode hotkey = KeyCode.F6;
     public static KeyCode targeted_key = KeyCode.SPACE;
-    public static int auto_clicker_cooldown = 100;
     public static boolean is_cooldown_text_filed_selected = false;
 
     private String previous_cooldown_text = "";
-
-    private final int MIN_COOLDOWN_SPEED = 1;      
-    private final int MAX_COOLDOWN_SPEED = 600000; //10 minutes
-    private final int DEFAULT_COOLDOWN_SPEED = 100;
 
     
     @FXML private TextField cooldown_text_field;
@@ -33,7 +40,24 @@ public class MainController {
 
     @FXML
     public void initialize() {
-    
+        Properties properties = new Properties();
+
+        try (InputStream input = new FileInputStream(APP_SETTINGS_PATH)) {
+            properties.load(input);
+
+            this.MIN_COOLDOWN_SPEED = Integer.parseInt(properties.getProperty("cooldown.min"));
+            this.MAX_COOLDOWN_SPEED = Integer.parseInt(properties.getProperty("cooldown.max"));
+            this.DEFAULT_COOLDOWN_SPEED = Integer.parseInt(properties.getProperty("cooldown.default"));
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            
+        }
+
+        //Set the cooldown to be equals to the default cooldown
+        auto_clicker_cooldown = this.DEFAULT_COOLDOWN_SPEED;
+        this.cooldown_text_field.setText(String.valueOf(auto_clicker_cooldown)); 
+
         this.cooldown_text_field.textProperty().addListener(
             (observable, oldValue, newValue) -> handleCooldownInput(newValue));
     }
