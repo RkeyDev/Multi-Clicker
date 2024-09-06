@@ -60,7 +60,7 @@ public class App extends Application{
         main_stage.setScene(scene);
         main_stage.setResizable(false);
         
-        main_stage.setOnCloseRequest(event->closeProgram());
+        main_stage.setOnCloseRequest(event->shutDownApplication());
 
 
         //Display the window on the screen
@@ -101,7 +101,7 @@ public class App extends Application{
         }
     } 
 
-    private void closeProgram(){
+    public static void shutDownApplication(){
         is_app_running = false;
         System.exit(0);
     }

@@ -1,7 +1,9 @@
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.text.Text;
@@ -26,7 +28,6 @@ public class MainController {
     public static KeyCode targeted_key = KeyCode.SPACE;
     public static boolean is_cooldown_text_filed_selected = false;
 
-    private String previous_cooldown_text = "";
 
     
     @FXML private TextField cooldown_text_field;
@@ -53,7 +54,8 @@ public class MainController {
 
 
         } catch (IOException ex) {
-            ex.printStackTrace();
+            showAlertMessage("Could not find \"" + APP_SETTINGS_PATH+"\". Try to reinstall the application and do not rename app files.");
+            App.shutDownApplication();
             
         }
 
@@ -71,29 +73,35 @@ public class MainController {
         try{
             if(!newValue.isEmpty()){
                 auto_clicker_cooldown = Integer.parseInt(newValue);
-                previous_cooldown_text = newValue; //Store the last cooldown_text
 
                 //Set auto_clicker_cooldown to default_cooldown if cooldown is above max_cooldown or below min_cooldown
-                if(auto_clicker_cooldown<MIN_COOLDOWN_SPEED || auto_clicker_cooldown>MAX_COOLDOWN_SPEED)
-                    auto_clicker_cooldown = DEFAULT_COOLDOWN_SPEED;
+                if(auto_clicker_cooldown<MIN_COOLDOWN_SPEED || auto_clicker_cooldown>MAX_COOLDOWN_SPEED){
 
-                    
+                    showAlertMessage("Please enter a number between the limits\nMax cooldown: " 
+                    + MAX_COOLDOWN_SPEED + "ms"+ 
+                    "\nMin cooldown: " +
+                     MIN_COOLDOWN_SPEED +"ms");
+
+                    auto_clicker_cooldown = DEFAULT_COOLDOWN_SPEED;
+                }
             }else{
-                previous_cooldown_text = ""; //Reset the previous_cooldown_text if cooldown text is empty
+                 //Set auto_clicker_cooldown to default if cooldown text field is empty
+                auto_clicker_cooldown = DEFAULT_COOLDOWN_SPEED;
             }
+            
         }
         catch(NumberFormatException e){
-            
-            restoreCooldownTextField(newValue);              
+            showAlertMessage("Please enter a valid positive number.");
+            restoreCooldownTextField(String.valueOf(auto_clicker_cooldown));              
         }          
     }
 
-    private void restoreCooldownTextField(String newValue){
+    private void restoreCooldownTextField(String textInput){
         Platform.runLater(()->{
-            this.cooldown_text_field.setText(previous_cooldown_text);
+            this.cooldown_text_field.setText(textInput);
             
             //Return the caret to the end of the text
-            this.cooldown_text_field.positionCaret(newValue.length());
+            this.cooldown_text_field.positionCaret(textInput.length());
             
             
             
@@ -146,8 +154,8 @@ public class MainController {
     if (!(is_setting_hotkey || is_setting_target_key)) {
         setAllUiComponentsDisable(true); //Disable the UI components
 
-        is_setting_target_key = key_type.equals(KeyType.TARGETED_KEY)?true:false;
-        is_setting_hotkey = key_type.equals(KeyType.HOTKEY)?true:false;
+        is_setting_target_key = key_type.equals(KeyType.TARGETED_KEY);
+        is_setting_hotkey = key_type.equals(KeyType.HOTKEY);
 
         new Thread(()->{ //New thread to set the key
             while (is_setting_target_key || is_setting_hotkey){
@@ -167,6 +175,11 @@ public class MainController {
 }
 
 
+
+    private void showAlertMessage(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR, message, ButtonType.OK);
+        alert.showAndWait();
+}
 
 
     public void setHotkey(KeyCode keyCode) {hotkey = keyCode;}
